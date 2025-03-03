@@ -1,0 +1,6 @@
+ollama
+PyPDF2
+torch
+whisper
+signal
+FPDF
