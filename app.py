@@ -9,6 +9,10 @@ import shutil
 import logging
 import json
 from modules import utils, transcriber, pdf_generator
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
+os.environ['PYTHONHTTPSVERIFY'] = '0'
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

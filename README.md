@@ -56,6 +56,41 @@ A Streamlit-based application that transcribes videos, generates timestamped tra
      ```
    - **Windows**: Download from [ffmpeg.org](https://ffmpeg.org/download.html) and add to PATH
 
+   > **Note**: FFmpeg is **required** for this application to work. Verify installation with `ffmpeg -version`
+
+## Configuration
+
+### Increase Upload Size Limit
+
+To process larger video files (>200MB), create a `.streamlit/config.toml` file in your project directory:
+
+```toml
+[server]
+maxUploadSize = 2000
+```
+
+This increases the maximum upload size to 2000MB (about 2GB).
+
+### SSL Certificate Issues
+
+If you're in a corporate environment and see SSL certificate errors when downloading Whisper models, add this code at the top of `modules/transcriber.py`:
+
+```python
+# Add near the top of the file, before any other imports
+import os
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+os.environ['PYTHONHTTPSVERIFY'] = '0'
+```
+
+Alternatively, configure your corporate proxy settings:
+
+```python
+import os
+os.environ['HTTP_PROXY'] = 'http://your-proxy-server:port'
+os.environ['HTTPS_PROXY'] = 'http://your-proxy-server:port'
+```
+
 ## Usage
 
 1. Start the Streamlit app:
@@ -111,23 +146,24 @@ A Streamlit-based application that transcribes videos, generates timestamped tra
 - Default: 30 seconds
 - Range: 10-120 seconds
 
-## Creating requirements.txt
+## Troubleshooting
 
-To generate the requirements.txt file for this project, you can run:
+### Common Issues
 
-```bash
-pip freeze > requirements.txt
-```
+1. **"No such file or directory: 'ffmpeg'"**: FFmpeg is not installed or not in your PATH
+   - Solution: Install FFmpeg and ensure it's in your system PATH
 
-Alternatively, here's a minimal requirements.txt file:
+2. **"module 'whisper' has no attribute 'load_model'"**: You have the wrong Whisper package
+   - Solution: Uninstall any existing whisper package and install OpenAI's package with `pip install openai-whisper`
 
-```
-streamlit>=1.15.0
-whisper>=1.0.0
-torch>=1.7.0
-pillow>=8.0.0
-fpdf>=1.7.2
-```
+3. **"File must be 200.0MB or smaller"**: Streamlit file size limit
+   - Solution: Create the `.streamlit/config.toml` file as described in the Configuration section
+
+4. **SSL Certificate errors**: Corporate firewall/proxy issues
+   - Solution: Use the SSL workaround code described in the Configuration section
+
+5. **Invalid JSON errors**: Corrupted job files
+   - Solution: Clear the jobs directory with `rm -f jobs/*.json`
 
 ## License
 
