@@ -1,1 +1,6 @@
 venv/*
+.env
+**/__pycache__/**
+output/*
+temp_processing/*
+jobs/*

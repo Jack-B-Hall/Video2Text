@@ -1,6 +1,11 @@
-ollama
-PyPDF2
-torch
+streamlit
 whisper
-signal
-FPDF
+PyPDF2
+ffmpeg-python
+pillow
+fpdf
+numpy
+torch
+datetime
+openai
+python-dotenv
